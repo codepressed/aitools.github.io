@@ -1,0 +1,364 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>AI Tools Info Repository | Learn & Certify</title>
+  <link rel="icon" href="assets/brain.png" type="image/png" />
+  <script src="https://cdn.tailwindcss.com"></script>
+  <!-- jsPDF for client-side PDF generation -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js" integrity="sha512-YkGkO7yQHSv5S49n3ti1grqlQJkSZz5KSLz+8OZyFzq2wz3pOn4nZCwz6S2OF4qX0M1iK1f8pP1N3p9m9+7X3A==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+  <!-- QRCode.js for generating a QR in the PDF -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js" integrity="sha512-6ZfDgS7s2WnI2n1mGqH9h4m8xS1q3QF+o7b2Cq5szd0I4sYpP0kQ9b5c6Y6iHQlqfT0kL6Wv9Q3kGk8d9V4w4g==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+  <style>
+    .bg-grid {
+      background-image: radial-gradient(#ffffff11 1px, transparent 1px);
+      background-size: 24px 24px;
+    }
+  </style>
+</head>
+<body class="bg-gray-950 text-white font-sans min-h-screen">
+<!-- Navbar -->
+<nav class="bg-gray-900/90 backdrop-blur text-white px-6 py-4 shadow-md flex justify-between items-center fixed top-0 left-0 right-0 z-50">
+  <a href="#" class="text-xl font-bold hover:text-yellow-300 transition">AI Tools Info Repository</a>
+  <div class="flex items-center gap-4 text-sm">
+    <a href="#modules" class="hover:text-yellow-300 transition">📚 Modules</a>
+    <a href="#about" class="hover:text-yellow-300 transition">ℹ️ About</a>
+    <a href="#certificate" class="hover:text-yellow-300 transition">🎓 Certificate</a>
+    <div class="flex items-center gap-2">
+      <input id="displayName" class="bg-gray-800 border border-gray-700 rounded px-2 py-1 text-sm" placeholder="Your name" />
+      <button id="btnSignIn" class="bg-yellow-400 text-black font-semibold px-3 py-1 rounded hover:brightness-95 transition">Save</button>
+    </div>
+  </div>
+</nav>
+
+<!-- Main Content -->
+<main class="pt-28 px-6 max-w-5xl mx-auto space-y-12">
+  <!-- Hero -->
+  <section class="text-center bg-grid rounded-2xl p-10 border border-gray-800 shadow-inner">
+    <h1 class="text-4xl font-extrabold mb-3">Learn Practical AI Tools</h1>
+    <p class="text-gray-300 max-w-2xl mx-auto">
+      A curated set of modules, hands-on demos, and references. Track your progress locally and, when you finish, generate your own certificate — all from a static GitHub Pages site.
+    </p>
+    <div class="mt-6 flex items-center justify-center gap-4">
+      <div class="w-64">
+        <div class="flex justify-between text-sm text-gray-400 mb-1">
+          <span>XP</span><span id="xpLabel">0</span>
+        </div>
+        <div class="w-full bg-gray-800 rounded-full h-3 overflow-hidden">
+          <div id="xpBar" class="bg-yellow-400 h-3 rounded-full transition-all" style="width: 0%;"></div>
+        </div>
+        <div class="text-xs text-gray-400 mt-1">Level <span id="levelLabel">1</span> · <span id="toNextLabel">100</span> XP to next</div>
+      </div>
+      <button id="resetProgress" class="text-xs text-gray-400 underline hover:text-white">Reset progress (local)</button>
+    </div>
+  </section>
+
+  <!-- Modules -->
+  <section id="modules" class="bg-gray-900/40 rounded-2xl p-6 border border-gray-800">
+    <h2 class="text-2xl font-semibold mb-4">Course Modules</h2>
+    <p class="text-gray-400 mb-4 text-sm">10 modules · complete each to earn XP. Your progress is saved in this browser (localStorage). You can later plug a backend like Supabase or your Spring Boot API to sync.</p>
+    <div id="modulesList" class="grid sm:grid-cols-2 gap-4"></div>
+  </section>
+
+  <!-- Certificate -->
+  <section id="certificate" class="bg-gray-900/40 rounded-2xl p-6 border border-gray-800">
+    <h2 class="text-2xl font-semibold mb-2">Certificate of Completion</h2>
+    <p class="text-gray-400 text-sm mb-4">
+      When you complete all modules, you can generate a personalized PDF certificate directly in your browser.
+    </p>
+    <div class="flex items-center gap-4">
+      <button id="btnCertificate" disabled class="bg-gray-700 text-gray-400 px-4 py-2 rounded cursor-not-allowed">Generate Certificate (finish all modules)</button>
+      <div id="certStatus" class="text-sm text-gray-400"></div>
+    </div>
+    <!-- Hidden QR container (used to render QR to a canvas and embed into PDF) -->
+    <div id="qrHidden" class="hidden"></div>
+  </section>
+
+  <!-- About -->
+  <section id="about" class="bg-gray-900/40 rounded-2xl p-6 border border-gray-800">
+    <h2 class="text-2xl font-semibold mb-2">About this Repository</h2>
+    <p class="text-gray-300">
+      This is a static, GitHub Pages–friendly site. Content lives in the repo. Videos can be embedded from YouTube/Vimeo or GitHub assets. 
+      Progress is stored locally for simplicity, and a backend can be added later for account-based tracking and public verification links.
+    </p>
+    <ul class="list-disc list-inside text-gray-400 mt-3 text-sm">
+      <li>Frontend: Tailwind via CDN.</li>
+      <li>Progress: localStorage (upgrade-ready for Supabase/Auth0+Cloud Run).</li>
+      <li>Certificate: client-side using jsPDF. Optional QR can point to a future verify endpoint.</li>
+    </ul>
+  </section>
+</main>
+
+<!-- Footer -->
+<footer class="mt-16 text-center text-gray-500 text-sm pb-6">
+  © <span id="year"></span> AI Tools Info Repository
+</footer>
+
+<script>
+// ---------- Data (can be moved to a JSON file and fetched) ----------
+const MODULES = [
+  { slug: "intro-ai-tools", title: "Intro to AI Tools Landscape", xp: 40, video: "https://www.youtube.com/embed/dQw4w9WgXcQ" },
+  { slug: "prompting", title: "Prompting Basics & Patterns", xp: 60, video: "" },
+  { slug: "agents", title: "Agents, Workflows & Automations", xp: 60, video: "" },
+  { slug: "vision", title: "Vision & Multimodal Use‑cases", xp: 50, video: "" },
+  { slug: "audio", title: "Speech-to-Text & TTS", xp: 40, video: "" },
+  { slug: "retrieval", title: "RAG & Knowledge Bases", xp: 80, video: "" },
+  { slug: "evals", title: "Evaluation & Guardrails", xp: 50, video: "" },
+  { slug: "frontend", title: "UI Patterns for AI Apps", xp: 40, video: "" },
+  { slug: "server", title: "Server Patterns & Cost Control", xp: 50, video: "" },
+  { slug: "ship", title: "Ship, Monitor, and Iterate", xp: 50, video: "" },
+];
+
+const STORAGE_KEY = "aiToolsRepo_v1";
+const DEFAULT_STATE = {
+  name: "",
+  completed: {}, // slug -> true
+  xp: 0
+};
+
+function loadState() {
+  try {
+    const raw = localStorage.getItem(STORAGE_KEY);
+    if (!raw) return { ...DEFAULT_STATE };
+    const obj = JSON.parse(raw);
+    return { ...DEFAULT_STATE, ...obj, completed: obj.completed || {} };
+  } catch (_) {
+    return { ...DEFAULT_STATE };
+  }
+}
+function saveState(s) { localStorage.setItem(STORAGE_KEY, JSON.stringify(s)); }
+
+// Level curve: 100 + 50*n
+function nextLevelThreshold(n) { return 100 + 50 * n; }
+function xpToLevel(xp) {
+  let level = 1;
+  let need = nextLevelThreshold(1);
+  let remaining = xp;
+  while (remaining >= need) {
+    remaining -= need;
+    level += 1;
+    need = nextLevelThreshold(level);
+  }
+  return { level, progressInLevel: remaining, toNext: need - remaining };
+}
+
+const state = loadState();
+
+// ---------- UI Bindings ----------
+const nameInput = document.getElementById('displayName');
+const btnSignIn = document.getElementById('btnSignIn');
+const resetBtn = document.getElementById('resetProgress');
+const modulesList = document.getElementById('modulesList');
+const xpLabel = document.getElementById('xpLabel');
+const xpBar = document.getElementById('xpBar');
+const levelLabel = document.getElementById('levelLabel');
+const toNextLabel = document.getElementById('toNextLabel');
+const btnCertificate = document.getElementById('btnCertificate');
+const certStatus = document.getElementById('certStatus');
+
+document.getElementById('year').textContent = new Date().getFullYear();
+
+// Prefill name
+nameInput.value = state.name || "";
+
+// Render modules
+function renderModules() {
+  modulesList.innerHTML = "";
+  MODULES.forEach((m, idx) => {
+    const done = !!state.completed[m.slug];
+    const card = document.createElement('div');
+    card.className = "bg-gray-800 rounded-xl p-4 border border-gray-700 flex flex-col justify-between";
+    card.innerHTML = `
+      <div>
+        <div class="flex items-center justify-between">
+          <h3 class="text-lg font-semibold">${idx + 1}. ${m.title}</h3>
+          <span class="text-xs px-2 py-1 rounded-full ${done ? 'bg-green-600' : 'bg-gray-700'}">${done ? 'Completed' : m.xp + ' XP'}</span>
+        </div>
+        ${m.video ? `<div class="mt-3 aspect-video"><iframe class="w-full h-full border-0 rounded" src="${m.video}" title="${m.title}" loading="lazy" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe></div>` : ''}
+      </div>
+      <div class="mt-3 flex items-center gap-2">
+        <button data-slug="${m.slug}" class="completeBtn ${done ? 'bg-green-600 hover:bg-green-500' : 'bg-yellow-400 text-black hover:brightness-95'} px-3 py-1 rounded text-sm font-semibold">${done ? 'Mark as Incomplete' : 'Mark as Completed'}</button>
+        <a href="#certificate" class="text-xs text-gray-400 underline">Go to certificate</a>
+      </div>
+    `;
+    modulesList.appendChild(card);
+  });
+
+  // attach handlers
+  document.querySelectorAll('.completeBtn').forEach(btn => {
+    btn.addEventListener('click', (e) => {
+      const slug = e.currentTarget.getAttribute('data-slug');
+      toggleComplete(slug);
+    });
+  });
+}
+
+function toggleComplete(slug) {
+  const wasDone = !!state.completed[slug];
+  const module = MODULES.find(m => m.slug === slug);
+  if (!module) return;
+  if (wasDone) {
+    delete state.completed[slug];
+    state.xp = Math.max(0, state.xp - module.xp);
+  } else {
+    state.completed[slug] = true;
+    state.xp += module.xp;
+  }
+  saveState(state);
+  updateXP();
+  renderModules();
+  updateCertificateState();
+}
+
+function updateXP() {
+  const { level, progressInLevel, toNext } = xpToLevel(state.xp);
+  xpLabel.textContent = state.xp;
+  levelLabel.textContent = level;
+  toNextLabel.textContent = toNext;
+
+  // compute % in current level
+  const need = nextLevelThreshold(level);
+  const pct = Math.min(100, Math.round((progressInLevel / need) * 100));
+  xpBar.style.width = pct + "%";
+}
+
+// sign-in (store name locally)
+btnSignIn.addEventListener('click', () => {
+  state.name = nameInput.value.trim();
+  saveState(state);
+  updateCertificateState();
+});
+
+resetBtn.addEventListener('click', () => {
+  if (!confirm('This will clear your local progress and XP. Continue?')) return;
+  localStorage.removeItem(STORAGE_KEY);
+  Object.assign(state, loadState());
+  nameInput.value = state.name;
+  updateXP();
+  renderModules();
+  updateCertificateState();
+});
+
+function updateCertificateState() {
+  const total = MODULES.length;
+  const doneCount = Object.keys(state.completed).length;
+  const allDone = doneCount === total;
+  btnCertificate.disabled = !allDone || !state.name;
+  btnCertificate.className = btnCertificate.disabled
+    ? "bg-gray-700 text-gray-400 px-4 py-2 rounded cursor-not-allowed"
+    : "bg-green-600 hover:bg-green-500 px-4 py-2 rounded font-semibold";
+  certStatus.textContent = !state.name
+    ? "Enter your name to enable certificate."
+    : (allDone ? "All modules complete. You can generate your certificate." : `Complete all modules to enable certificate (${doneCount}/${total}).`);
+}
+
+// ---------- Certificate generation (client-side PDF) ----------
+btnCertificate.addEventListener('click', async () => {
+  const { jsPDF } = window.jspdf;
+  const doc = new jsPDF({ unit: 'pt', format: 'a4' });
+  const pageW = doc.internal.pageSize.getWidth();
+  const pageH = doc.internal.pageSize.getHeight();
+
+  const margin = 48;
+  // Header band
+  doc.setFillColor(17, 24, 39);
+  doc.rect(0, 0, pageW, 90, 'F');
+  doc.setTextColor(255,255,255);
+  doc.setFont('Helvetica', 'bold');
+  doc.setFontSize(20);
+  doc.text('AI Tools Info Repository', margin, 56);
+
+  // Title
+  doc.setTextColor(0,0,0);
+  doc.setFont('Helvetica', 'bold');
+  doc.setFontSize(28);
+  doc.text('Certificate of Completion', margin, 160);
+
+  // Recipient
+  doc.setFont('Helvetica', 'normal');
+  doc.setFontSize(14);
+  doc.text('This certifies that', margin, 200);
+  doc.setFont('Helvetica', 'bold');
+  doc.setFontSize(20);
+  doc.text(state.name || 'Learner', margin, 230);
+  doc.setFont('Helvetica', 'normal');
+  doc.setFontSize(14);
+  doc.text('has successfully completed the 10‑module curriculum of the AI Tools Info Repository.', margin, 260, { maxWidth: pageW - margin*2 });
+
+  // XP / Level
+  const { level } = xpToLevel(state.xp);
+  doc.text(`Awarded XP: ${state.xp} · Level: ${level}`, margin, 290);
+
+  // Date & ID
+  const issued = new Date().toISOString().slice(0,10);
+  const uid = cryptoRandomString(10);
+  doc.text(`Issued: ${issued} · Certificate ID: ${uid}`, margin, 320);
+
+  // QR (optional verification URL stub)
+  const verifyURL = `https://your-domain.example/verify/${uid}`;
+  const qrDataUrl = await makeQRDataURL(verifyURL, 128);
+  if (qrDataUrl) {
+    // place QR on the right
+    const qrSize = 100;
+    doc.addImage(qrDataUrl, 'PNG', pageW - margin - qrSize, 180, qrSize, qrSize);
+    doc.setFontSize(10);
+    doc.setTextColor(100);
+    doc.text(verifyURL, pageW - margin - qrSize, 290, { maxWidth: qrSize, align: 'left' });
+  }
+
+  // Signature line
+  doc.setDrawColor(120);
+  doc.line(margin, pageH - 140, margin + 200, pageH - 140);
+  doc.setFontSize(12);
+  doc.setTextColor(0,0,0);
+  doc.text('Course Maintainer', margin, pageH - 120);
+
+  // Footer
+  doc.setFontSize(10);
+  doc.setTextColor(120);
+  doc.text('This certificate was generated client-side for educational purposes. For public verification, connect a backend and serve a verify URL.', margin, pageH - 60, { maxWidth: pageW - margin*2 });
+
+  doc.save(`certificate_${state.name?.replace(/\s+/g,'_') || 'learner'}.pdf`);
+});
+
+function cryptoRandomString(len){
+  // Fallback if crypto unavailable
+  try {
+    const arr = new Uint8Array(len);
+    (window.crypto || window.msCrypto).getRandomValues(arr);
+    return Array.from(arr).map(v => (v % 36).toString(36)).join('');
+  } catch (e) {
+    const chars = 'abcdefghijklmnopqrstuvwxyz0123456789';
+    let s = '';
+    for (let i=0;i<len;i++) s += chars[Math.floor(Math.random()*chars.length)];
+    return s;
+  }
+}
+
+function makeQRDataURL(text, size){
+  return new Promise((resolve) => {
+    const container = document.getElementById('qrHidden');
+    container.innerHTML = '';
+    const div = document.createElement('div');
+    container.appendChild(div);
+    const qr = new QRCode(div, { text, width: size, height: size, correctLevel: QRCode.CorrectLevel.M });
+    // Wait a tick for canvas/img to render
+    setTimeout(() => {
+      // qrcodejs renders a <img> or <canvas>
+      const img = div.querySelector('img');
+      const canvas = div.querySelector('canvas');
+      if (img && img.src) return resolve(img.src);
+      if (canvas) return resolve(canvas.toDataURL('image/png'));
+      resolve(null);
+    }, 300);
+  });
+}
+
+// Init
+updateXP();
+renderModules();
+updateCertificateState();
+</script>
+</body>
+</html>
