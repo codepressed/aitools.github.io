@@ -98,13 +98,13 @@
 <script>
 // ---------- Data (can be moved to a JSON file and fetched) ----------
 const MODULES = [
-  { slug: "intro-ai-tools", title: "Intro to AI Tools Landscape", xp: 40, video: "https://www.youtube.com/embed/dQw4w9WgXcQ" },
-  { slug: "prompting", title: "Prompting Basics & Patterns", xp: 60, video: "" },
-  { slug: "agents", title: "Agents, Workflows & Automations", xp: 60, video: "" },
-  { slug: "vision", title: "Vision & Multimodal Use‑cases", xp: 50, video: "" },
-  { slug: "audio", title: "Speech-to-Text & TTS", xp: 40, video: "" },
-  { slug: "retrieval", title: "RAG & Knowledge Bases", xp: 80, video: "" },
-  { slug: "evals", title: "Evaluation & Guardrails", xp: 50, video: "" },
+  { slug: "intro-ai-tools", title: "Intro to AI Tools", xp: 40, video: "https://www.youtube.com/embed/dQw4w9WgXcQ" },
+  { slug: "prompting", title: "Prompt Engineering", xp: 60, video: "" },
+  { slug: "agents", title: "AI: A replacement or a tool", xp: 60, video: "" },
+  { slug: "vision", title: "AI in cybersecurity", xp: 50, video: "" },
+  { slug: "audio", title: "AI in the nursery field", xp: 40, video: "" },
+  { slug: "retrieval", title: "Consequences of AI in business management", xp: 80, video: "" },
+  { slug: "evals", title: "AI for music production", xp: 50, video: "" },
   { slug: "frontend", title: "UI Patterns for AI Apps", xp: 40, video: "" },
   { slug: "server", title: "Server Patterns & Cost Control", xp: 50, video: "" },
   { slug: "ship", title: "Ship, Monitor, and Iterate", xp: 50, video: "" },
@@ -179,7 +179,8 @@ function renderModules() {
       </div>
       <div class="mt-3 flex items-center gap-2">
         <button data-slug="${m.slug}" class="completeBtn ${done ? 'bg-green-600 hover:bg-green-500' : 'bg-yellow-400 text-black hover:brightness-95'} px-3 py-1 rounded text-sm font-semibold">${done ? 'Mark as Incomplete' : 'Mark as Completed'}</button>
-        <a href="#certificate" class="text-xs text-gray-400 underline">Go to certificate</a>
+        <a href="static/pdfs/evameidiaz.pdf" 
+     target="_blank"  class="text-xs text-gray-400 underline">Go to certificate</a>
       </div>
     `;
     modulesList.appendChild(card);
